@@ -1,0 +1,21 @@
+version: "3"
+services:
+  doku:
+    image: amineat/dokuwiki:v1
+    networks:
+      - webgateway
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+      labels:
+        - "traefik.frontend.rule=Host:myapp.!!.com;PathPrefix:/dokuwiki/"
+        - "traefik.port=80"
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  webgateway:
+    driver: overlay
+    external: true
